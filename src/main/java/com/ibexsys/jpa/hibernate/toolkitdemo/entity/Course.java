@@ -17,7 +17,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,6 +31,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name="Course")  // maps any table
 @Cacheable  // Causes entity to do cache lookup in 2nd level cache
+@SQLDelete(sql="update course set is_deleted=true where id=?")  // Hibernate Specific
+@Where(clause="is_deleted = false")// Hibernate Specific
 @NamedQueries(value = { 
 @NamedQuery(name="find_all_courses", query="select c from Course c"),
 @NamedQuery(name="find_course_by_name", query="select c from Course c where name=?")})
@@ -54,7 +58,9 @@ public class Course {
 	@CreationTimestamp
 	private LocalDateTime createdDate;
 	
-//	private boolean isdeleted;
+	
+	private boolean isDeleted;
+
 	
 	protected Course() {};
 	
@@ -98,4 +104,9 @@ public class Course {
 	public void addStudent(Student student) {
 		this.students.add(student);
 	}
+
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
 }

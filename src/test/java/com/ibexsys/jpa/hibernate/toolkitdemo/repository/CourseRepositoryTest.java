@@ -112,18 +112,18 @@ public class CourseRepositoryTest implements CommandLineRunner{
 	}
 	
 	
+	// Soft Delete, uses @SQLDelete and @Where clauses in Entity
 	@Test
 	@Transactional
 	@DirtiesContext
-	public void deleteByIdBasicTest() {
+	public void deleteByIdSoftDeleteTest() {
 		Course course = repository.findById(10001L);
 
-		assertNotNull(course);
-		assertEquals("JPA in 50 Steps",course.getName());
-		
 		repository.deleteById(course.getId());
 		
-	    assertNull(repository.findById(10001L));
+		course = repository.findById(10001L);
+		
+	    assertNotNull(repository.findById(10001L));
 	}
 
 	@Override
