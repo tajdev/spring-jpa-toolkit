@@ -123,7 +123,7 @@ public class CourseRepositoryTest implements CommandLineRunner{
 		
 		course = repository.findById(10001L);
 		
-	    assertNotNull(repository.findById(10001L));
+	    assertNull(repository.findById(10001L));
 	}
 
 	@Override

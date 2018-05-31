@@ -4,8 +4,12 @@ import java.math.BigDecimal;
 
 import javax.persistence.Entity;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Entity
 public class FullTimeEmployee extends Employee{
+	private static Logger logger = LoggerFactory.getLogger(FullTimeEmployee.class);
 	
 	private BigDecimal salary;
 	

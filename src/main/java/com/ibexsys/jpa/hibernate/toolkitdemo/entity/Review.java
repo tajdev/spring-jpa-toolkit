@@ -5,12 +5,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 // Notes:
 // Make sure to not create setter for ID and/or use it in constructor
 // Make default constructor protected since JPA does not allow use of it by others
 
 @Entity
 public class Review {
+	
+	private static Logger logger = LoggerFactory.getLogger(Review.class);
 	
 	@Id
 	@GeneratedValue

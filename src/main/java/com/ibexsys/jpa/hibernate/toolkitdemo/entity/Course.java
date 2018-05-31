@@ -14,12 +14,15 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 // Make default constructor protected since JPA does not allow use of it by others
 
 @Entity
-@Table(name="Course")  // maps any table
+@Table(name="Course")  // maps any table name
 @Cacheable  // Causes entity to do cache lookup in 2nd level cache
 @SQLDelete(sql="update course set is_deleted=true where id=?")  // Hibernate Specific
 @Where(clause="is_deleted = false")// Hibernate Specific
@@ -37,6 +40,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @NamedQuery(name="find_all_courses", query="select c from Course c"),
 @NamedQuery(name="find_course_by_name", query="select c from Course c where name=?")})
 public class Course {
+	
+	private static Logger logger = LoggerFactory.getLogger(Course.class);
 	
 	@Id
 	@GeneratedValue
@@ -58,9 +63,16 @@ public class Course {
 	@CreationTimestamp
 	private LocalDateTime createdDate;
 	
-	
 	private boolean isDeleted;
-
+	
+	
+	// Executed on delete, method name is arbritray, but should be clear
+	@PreRemove
+	private void preRemove() {
+		this.isDeleted = true;
+		
+		logger.info("Displaying PreRemove Value -> {} " + this.isDeleted);
+	}
 	
 	protected Course() {};
 	
@@ -80,10 +92,7 @@ public class Course {
 		this.name = name;
 	}
 	
-	@Override
-	public String toString() {
-		return String.format("Course[%s]", name);
-	}
+
 
 	public List<Review> getReviews() {
 		return reviews;
@@ -107,6 +116,11 @@ public class Course {
 
 	public boolean isDeleted() {
 		return isDeleted;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("Course[%s]", name);
 	}
 
 }

@@ -14,6 +14,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 // Notes:
 // Make sure to not create setter for ID and/or use it in constructor
@@ -22,6 +25,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name="Student")  // maps any table
 public class Student {
+	
+	private static Logger logger = LoggerFactory.getLogger(Student.class);
 	
 	@Id
 	@GeneratedValue

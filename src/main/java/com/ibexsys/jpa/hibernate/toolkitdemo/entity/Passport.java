@@ -8,6 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 // Notes:
 // Make sure to not create setter for ID and/or use it in constructor
@@ -16,6 +19,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name="Passport")  // maps any table
 public class Passport {
+	
+	private static Logger logger = LoggerFactory.getLogger(Passport.class);
 	
 	@Id
 	@GeneratedValue
