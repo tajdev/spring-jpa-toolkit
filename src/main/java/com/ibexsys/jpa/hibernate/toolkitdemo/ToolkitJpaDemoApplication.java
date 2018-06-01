@@ -16,6 +16,7 @@ import com.ibexsys.jpa.hibernate.toolkitdemo.entity.FullTimeEmployee;
 import com.ibexsys.jpa.hibernate.toolkitdemo.entity.PartTimeEmployee;
 import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Passport;
 import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Review;
+import com.ibexsys.jpa.hibernate.toolkitdemo.entity.ReviewRating;
 import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Student;
 import com.ibexsys.jpa.hibernate.toolkitdemo.repository.CourseRepository;
 import com.ibexsys.jpa.hibernate.toolkitdemo.repository.EmployeeRepository;
@@ -73,8 +74,8 @@ public class ToolkitJpaDemoApplication implements CommandLineRunner{
 	public void addReviewsTmp() {
 		List<Review> reviews = new ArrayList<Review>();
 		
-		Review review1 = new Review("5","Great Stuff FWIW");
-		Review review2 = new Review("5","Great Stuff FWIW Mainard");
+		Review review1 = new Review(ReviewRating.FIVE,"Great Stuff FWIW");
+		Review review2 = new Review(ReviewRating.THREE,"Great Stuff FWIW Mainard");
 		
 		reviews.add(review1);
 		reviews.add(review2);
@@ -121,7 +122,7 @@ public class ToolkitJpaDemoApplication implements CommandLineRunner{
 		
 		Student student = new Student("JackOff");
 		Course course = new Course("Microservices in 100 steps");
-		Review review = new Review("5","Great Stuff FWIW Mainard");
+		Review review = new Review(ReviewRating.FIVE,"Great Stuff FWIW Mainard");
 		Passport passport = new Passport("Z90971");
 
 		studentRepo.insertStudentPasswordCourse(student,passport,review,course);

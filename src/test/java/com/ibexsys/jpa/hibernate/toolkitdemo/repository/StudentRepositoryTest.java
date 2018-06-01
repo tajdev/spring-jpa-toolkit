@@ -13,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ibexsys.jpa.hibernate.toolkitdemo.ToolkitJpaDemoApplication;
+import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Address;
 import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Course;
 import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Passport;
 import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Student;
@@ -77,6 +78,8 @@ public class StudentRepositoryTest {
 		logger.info("Courses -> {}",student.getCourses());
 	}
 	
+	
+	
 	@Test
 	@Transactional
 	public void retrieveCourseAndStudent() {
@@ -84,6 +87,20 @@ public class StudentRepositoryTest {
 		Course course = em.find(Course.class, 10001L);
 		logger.info("course -> {}", course);
 		logger.info("Students -> {}", course.getStudents());
+		
+	}
+	
+	@Test
+	@Transactional
+	public void setStudentAddressTest() {
+		
+		Student student = em.find(Student.class, 20001L);
+		student.setAddress(new Address("Line1","Line2","City"));
+		em.flush();
+
+		logger.info("student with address -> {}",student);
+		
+
 		
 	}
 	

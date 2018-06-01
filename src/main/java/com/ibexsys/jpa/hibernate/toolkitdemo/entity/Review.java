@@ -1,10 +1,11 @@
 package com.ibexsys.jpa.hibernate.toolkitdemo.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +16,7 @@ import org.slf4j.LoggerFactory;
 @Entity
 public class Review {
 	
-	private static Logger logger = LoggerFactory.getLogger(Review.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(Review.class);
 	
 	@Id
 	@GeneratedValue
@@ -23,7 +24,9 @@ public class Review {
 	
 	private String description;
 	
-	private String rating;
+	@Enumerated(EnumType.STRING)
+	private ReviewRating rating;
+	
 	
 	
 	// matching db column course_id
@@ -32,7 +35,7 @@ public class Review {
 	
 	protected Review() {};
 	
-	public Review(String rating, String description) {
+	public Review(ReviewRating rating, String description) {
 		this.description = description;
 		this.rating = rating;
 	}
@@ -53,11 +56,11 @@ public class Review {
 		this.description = description;
 	}
 
-	public String getRating() {
+	public ReviewRating getRating() {
 		return rating;
 	}
 
-	public void setRating(String rating) {
+	public void setRating(ReviewRating rating) {
 		this.rating = rating;
 	}
 	

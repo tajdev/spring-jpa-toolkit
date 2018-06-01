@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -26,7 +27,7 @@ import org.slf4j.LoggerFactory;
 @Table(name="Student")  // maps any table
 public class Student {
 	
-	private static Logger logger = LoggerFactory.getLogger(Student.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(Student.class);
 	
 	@Id
 	@GeneratedValue
@@ -40,6 +41,9 @@ public class Student {
 	
 	@Column(name="name", nullable = false)   // maps any name
 	private String name;
+	
+	@Embedded
+	private Address address;
 	
 	// Owner of one-to-one 
 	@OneToOne(fetch=FetchType.LAZY)
@@ -83,6 +87,14 @@ public class Student {
 
 	public void addCourse(Course course) {
 		this.courses.add(course);
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
 }

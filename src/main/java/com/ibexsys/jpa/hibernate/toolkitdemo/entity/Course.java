@@ -35,13 +35,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name="Course")  // maps any table name
 @Cacheable  // Causes entity to do cache lookup in 2nd level cache
 @SQLDelete(sql="update course set is_deleted=true where id=?")  // Hibernate Specific
-@Where(clause="is_deleted = false")// Hibernate Specific
+@Where(clause="is_deleted = false")// Hibernate Specific NOTE: This does not work for native queries
 @NamedQueries(value = { 
 @NamedQuery(name="find_all_courses", query="select c from Course c"),
 @NamedQuery(name="find_course_by_name", query="select c from Course c where name=?")})
 public class Course {
 	
-	private static Logger logger = LoggerFactory.getLogger(Course.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(Course.class);
 	
 	@Id
 	@GeneratedValue
@@ -71,7 +71,7 @@ public class Course {
 	private void preRemove() {
 		this.isDeleted = true;
 		
-		logger.info("Displaying PreRemove Value -> {} " + this.isDeleted);
+		LOGGER.info("Displaying PreRemove Value -> {} " + this.isDeleted);
 	}
 	
 	protected Course() {};

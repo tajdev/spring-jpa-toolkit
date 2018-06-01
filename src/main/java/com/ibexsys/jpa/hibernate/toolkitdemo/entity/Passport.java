@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 @Table(name="Passport")  // maps any table
 public class Passport {
 	
-	private static Logger logger = LoggerFactory.getLogger(Passport.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(Passport.class);
 	
 	@Id
 	@GeneratedValue

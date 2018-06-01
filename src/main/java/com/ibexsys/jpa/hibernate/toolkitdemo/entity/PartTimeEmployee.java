@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 @Entity
 public class PartTimeEmployee extends Employee{
 	
-	private static Logger logger = LoggerFactory.getLogger(PartTimeEmployee.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(PartTimeEmployee.class);
 	
 	private BigDecimal hourlyWage;
 	
