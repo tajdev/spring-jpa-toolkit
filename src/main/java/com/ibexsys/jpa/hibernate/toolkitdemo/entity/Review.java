@@ -18,36 +18,31 @@ import org.slf4j.LoggerFactory;
 
 @Entity
 public class Review {
-	
+
 	private static Logger LOGGER = LoggerFactory.getLogger(Review.class);
-	
+
 	@Id
-	@GeneratedValue(
-			strategy=GenerationType.AUTO,
-			generator="native"
-	)
-	@GenericGenerator(
-		    name = "native", 
-		    strategy = "native"
-	)
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+	@GenericGenerator(name = "native", strategy = "native")
 	private Long id;
-	
+
 	private String description;
-	
+
 	@Enumerated(EnumType.STRING)
 	private ReviewRating rating;
-	
+
 	// matching db column course_id
 	@ManyToOne
 	private Course course;
-	
-	protected Review() {};
-	
+
+	protected Review() {
+	};
+
 	public Review(ReviewRating rating, String description) {
 		this.description = description;
 		this.rating = rating;
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -71,10 +66,10 @@ public class Review {
 	public void setRating(ReviewRating rating) {
 		this.rating = rating;
 	}
-	
+
 	@Override
 	public String toString() {
-		return String.format("Review -> %s %s]",rating,description);
+		return String.format("Review -> %s %s]", rating, description);
 	}
 
 	public Course getCourse() {

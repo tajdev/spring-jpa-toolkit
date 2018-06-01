@@ -34,133 +34,137 @@ public class CriteriaQueryTest {
 
 	@Test
 	public void JPQL_Basic() {
-		TypedQuery<Course> query = em.createQuery("Select c From Course c",Course.class);
+		TypedQuery<Course> query = em.createQuery("Select c From Course c", Course.class);
 		List<Course> resultList = query.getResultList();
 		logger.info("Select c From Course c -> {}", resultList);
 	}
-	
+
 	@Test
 	public void Criteria_Basic_All() {
-		
+
 		// Simple Steps for criteria - Select C from Course
 
-		// 1. Use Criteria Builder to create a Criteria Query returning the expected result object
-			CriteriaBuilder cb = em.getCriteriaBuilder();
-			CriteriaQuery<Course> cq = cb.createQuery(Course.class);
-		
+		// 1. Use Criteria Builder to create a Criteria Query returning the expected
+		// result object
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Course> cq = cb.createQuery(Course.class);
+
 		// 2. Define roots for tables which are involved in the query
-			Root<Course> courseRooot = cq.from(Course.class);
-		
+		Root<Course> courseRooot = cq.from(Course.class);
+
 		// 3. Define predicated ect using criteria builder
-			// Not used in simple
-		
+		// Not used in simple
+
 		// 4. Add predicates to ect to the criteria Query
-			// Not used in simple		
-		
+		// Not used in simple
+
 		// 5. Build the Typed query using entity manager and criteria query
-			// Not used in simple
-		
+		// Not used in simple
+
 		TypedQuery<Course> query = em.createQuery(cq.select(courseRooot));
 		List<Course> resultList = query.getResultList();
 		logger.info("Select c From Course c -> {}", resultList);
 	}
-	
+
 	@Test
 	public void Criteria_Basic_All_Courses_Having100Steps() {
-		
+
 		// Simple Steps for criteria - Select C from Course where name like '%100 Steps'
 
-		// 1. Use Criteria Builder to create a Criteria Query returning the expected result object
-			CriteriaBuilder cb = em.getCriteriaBuilder();
-			CriteriaQuery<Course> cq = cb.createQuery(Course.class);
-		
+		// 1. Use Criteria Builder to create a Criteria Query returning the expected
+		// result object
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Course> cq = cb.createQuery(Course.class);
+
 		// 2. Define roots for tables which are involved in the query
-			Root<Course> courseRooot = cq.from(Course.class);
-		
+		Root<Course> courseRooot = cq.from(Course.class);
+
 		// 3. Define predicated ect using criteria builder
-			Predicate like100Steps = cb.like(courseRooot.get("name"),"%100 Steps");
-			
+		Predicate like100Steps = cb.like(courseRooot.get("name"), "%100 Steps");
+
 		// 4. Add predicates to ect to the criteria Query
-			cq.where(like100Steps);		
-		
+		cq.where(like100Steps);
+
 		// 5. Build the Typed query using entity manager and criteria query
-			TypedQuery<Course> query = em.createQuery(cq.select(courseRooot));
-			List<Course> resultList = query.getResultList();
-			logger.info("Select C from Course where name like '%100 Steps' -> {}", resultList);
+		TypedQuery<Course> query = em.createQuery(cq.select(courseRooot));
+		List<Course> resultList = query.getResultList();
+		logger.info("Select C from Course where name like '%100 Steps' -> {}", resultList);
 	}
-	
+
 	@Test
 	public void Criteria_Basic_All_Courses_WithOutStudents() {
-		
+
 		// Simple Steps for criteria - Select C from Course where c.students is empty
 
-		// 1. Use Criteria Builder to create a Criteria Query returning the expected result object
-			CriteriaBuilder cb = em.getCriteriaBuilder();
-			CriteriaQuery<Course> cq = cb.createQuery(Course.class);
-		
+		// 1. Use Criteria Builder to create a Criteria Query returning the expected
+		// result object
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Course> cq = cb.createQuery(Course.class);
+
 		// 2. Define roots for tables which are involved in the query
-			Root<Course> courseRooot = cq.from(Course.class);
-		
+		Root<Course> courseRooot = cq.from(Course.class);
+
 		// 3. Define predicated ect using criteria builder
-			Predicate noStudents = cb.isEmpty(courseRooot.get("students"));
-			
+		Predicate noStudents = cb.isEmpty(courseRooot.get("students"));
+
 		// 4. Add predicates to ect to the criteria Query
-			cq.where(noStudents);		
-		
+		cq.where(noStudents);
+
 		// 5. Build the Typed query using entity manager and criteria query
-			TypedQuery<Course> query = em.createQuery(cq.select(courseRooot));
-			List<Course> resultList = query.getResultList();
-			logger.info("Select C from Course where c.students is empty -> {}", resultList);
+		TypedQuery<Course> query = em.createQuery(cq.select(courseRooot));
+		List<Course> resultList = query.getResultList();
+		logger.info("Select C from Course where c.students is empty -> {}", resultList);
 	}
-	
+
 	@Test
 	public void join() {
-		
+
 		// Simple Steps for criteria - Select C from Course join c.students
 
-		// 1. Use Criteria Builder to create a Criteria Query returning the expected result object
-			CriteriaBuilder cb = em.getCriteriaBuilder();
-			CriteriaQuery<Course> cq = cb.createQuery(Course.class);
-		
+		// 1. Use Criteria Builder to create a Criteria Query returning the expected
+		// result object
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Course> cq = cb.createQuery(Course.class);
+
 		// 2. Define roots for tables which are involved in the query
-			Root<Course> courseRoot = cq.from(Course.class);
-		
+		Root<Course> courseRoot = cq.from(Course.class);
+
 		// 3. Define predicated ect using criteria builder
-			Join<Object,Object> join = courseRoot.join("students");
-			
+		Join<Object, Object> join = courseRoot.join("students");
+
 		// 4. Add predicates to ect to the criteria Query
-		//	cq.where(noStudents);		
-		
+		// cq.where(noStudents);
+
 		// 5. Build the Typed query using entity manager and criteria query
-			TypedQuery<Course> query = em.createQuery(cq.select(courseRoot));
-			List<Course> resultList = query.getResultList();
-			logger.info("Select C from Course where c.students is empty -> {}", resultList);
+		TypedQuery<Course> query = em.createQuery(cq.select(courseRoot));
+		List<Course> resultList = query.getResultList();
+		logger.info("Select C from Course where c.students is empty -> {}", resultList);
 	}
-	
+
 	@Test
 	public void left_join() {
-		
+
 		// Simple Steps for criteria - Select C from Course join c.students
 
-		// 1. Use Criteria Builder to create a Criteria Query returning the expected result object
-			CriteriaBuilder cb = em.getCriteriaBuilder();
-			CriteriaQuery<Course> cq = cb.createQuery(Course.class);
-		
+		// 1. Use Criteria Builder to create a Criteria Query returning the expected
+		// result object
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Course> cq = cb.createQuery(Course.class);
+
 		// 2. Define roots for tables which are involved in the query
-			Root<Course> courseRoot = cq.from(Course.class);
-		
-		// 3. Define predicated ect using criteria builder (includes all courses regardless of students)
-			Join<Object,Object> join = courseRoot.join("students",JoinType.LEFT);
-			
+		Root<Course> courseRoot = cq.from(Course.class);
+
+		// 3. Define predicated ect using criteria builder (includes all courses
+		// regardless of students)
+		Join<Object, Object> join = courseRoot.join("students", JoinType.LEFT);
+
 		// 4. Add predicates to ect to the criteria Query
-		//	cq.where(noStudents);		
-		
+		// cq.where(noStudents);
+
 		// 5. Build the Typed query using entity manager and criteria query
-			TypedQuery<Course> query = em.createQuery(cq.select(courseRoot));
-			List<Course> resultList = query.getResultList();
-			logger.info("Select C from Course where c.students is empty -> {}", resultList);
+		TypedQuery<Course> query = em.createQuery(cq.select(courseRoot));
+		List<Course> resultList = query.getResultList();
+		logger.info("Select C from Course where c.students is empty -> {}", resultList);
 	}
-	
-	
-	
+
 }

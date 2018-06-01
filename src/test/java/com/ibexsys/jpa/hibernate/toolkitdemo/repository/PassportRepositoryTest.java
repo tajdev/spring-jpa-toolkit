@@ -16,25 +16,25 @@ import com.ibexsys.jpa.hibernate.toolkitdemo.ToolkitJpaDemoApplication;
 import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Student;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes=ToolkitJpaDemoApplication.class)
-@DirtiesContext(classMode= DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@SpringBootTest(classes = ToolkitJpaDemoApplication.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class PassportRepositoryTest {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
-	
-	
+
 	@Autowired
 	private StudentRepository repo;
-	
+
 	@Autowired
 	private EntityManager em;
-		
+
 	@Test
-	@Transactional	// Needed to initialize session for logger statments, otherwise dropped after find
+	@Transactional // Needed to initialize session for logger statments, otherwise dropped after
+					// find
 	public void retrieveStudentAndPassportDetails() {
-		
-		Student student = em.find(Student.class,20001L);
-		logger.info("student -> {}",student);
-		logger.info("passport -> {}",student.getPassport());
+
+		Student student = em.find(Student.class, 20001L);
+		logger.info("student -> {}", student);
+		logger.info("passport -> {}", student.getPassport());
 	}
 }

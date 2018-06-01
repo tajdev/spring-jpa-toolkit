@@ -8,14 +8,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Entity
-public class PartTimeEmployee extends Employee{
-	
+public class PartTimeEmployee extends Employee {
+
 	private static Logger LOGGER = LoggerFactory.getLogger(PartTimeEmployee.class);
-	
+
 	private BigDecimal hourlyWage;
-	
-	protected PartTimeEmployee() {};
-	
+
+	protected PartTimeEmployee() {
+	};
+
 	public PartTimeEmployee(String name, BigDecimal hourlyWage) {
 		super(name);
 		this.hourlyWage = hourlyWage;

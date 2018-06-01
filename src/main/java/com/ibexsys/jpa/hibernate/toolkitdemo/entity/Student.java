@@ -20,48 +20,40 @@ import org.hibernate.annotations.GenericGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 // Notes:
 // Make sure to not create setter for ID and/or use it in constructor
 // Make default constructor protected since JPA does not allow use of it by others
 
 @Entity
-@Table(name="Student")  // maps any table
+@Table(name = "Student") // maps any table
 public class Student {
-	
+
 	private static Logger LOGGER = LoggerFactory.getLogger(Student.class);
-	
+
 	@Id
-	@GeneratedValue(
-			strategy=GenerationType.AUTO,
-			generator="native"
-	)
-	@GenericGenerator(
-		    name = "native", 
-		    strategy = "native"
-	)
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+	@GenericGenerator(name = "native", strategy = "native")
 	private Long id;
-	
-	protected Student() {};
-	
+
+	protected Student() {
+	};
+
 	public Student(String name) {
 		this.name = name;
 	}
-	
-	@Column(name="name", nullable = false)   // maps any name
+
+	@Column(name = "name", nullable = false) // maps any name
 	private String name;
-	
+
 	@Embedded
 	private Address address;
-	
-	// Owner of one-to-one 
-	@OneToOne(fetch=FetchType.LAZY)
+
+	// Owner of one-to-one
+	@OneToOne(fetch = FetchType.LAZY)
 	private Passport passport;
-	
+
 	@ManyToMany
-	@JoinTable(name="STUDENT_COURSE",
-	 joinColumns=@JoinColumn(name="STUDENT_ID"),
-	 inverseJoinColumns=@JoinColumn(name="COURSE_ID"))
+	@JoinTable(name = "STUDENT_COURSE", joinColumns = @JoinColumn(name = "STUDENT_ID"), inverseJoinColumns = @JoinColumn(name = "COURSE_ID"))
 
 	private List<Course> courses = new ArrayList<Course>();
 
@@ -72,7 +64,7 @@ public class Student {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public Passport getPassport() {
 		return passport;
 	}
@@ -80,7 +72,7 @@ public class Student {
 	public void setPassport(Passport passport) {
 		this.passport = passport;
 	}
-	
+
 	public Long getId() {
 		return this.id;
 	}
