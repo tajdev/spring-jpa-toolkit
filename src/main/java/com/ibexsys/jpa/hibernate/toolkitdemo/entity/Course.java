@@ -37,8 +37,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @SQLDelete(sql="update course set is_deleted=true where id=?")  // Hibernate Specific
 @Where(clause="is_deleted = false")// Hibernate Specific NOTE: This does not work for native queries
 @NamedQueries(value = { 
-@NamedQuery(name="find_all_courses", query="select c from Course c"),
-@NamedQuery(name="find_course_by_name", query="select c from Course c where name=?")})
+@NamedQuery(name="find_all_courses",
+			query="select c from Course c"),
+@NamedQuery(name="find_all_courses_with_join_fetch",
+			query="select c from Course c JOIN FETCH c.students s"),
+@NamedQuery(name="find_course_by_name", 
+			query="select c from Course c where name=?")})
 public class Course {
 	
 	private static Logger LOGGER = LoggerFactory.getLogger(Course.class);

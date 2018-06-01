@@ -54,11 +54,10 @@ public class NativeQueriesTest {
 	@Test
 	@Transactional
 	public void native_queries_to_update() {
-		Query query = em.createNativeQuery("Update COURSE set last_updated_date=sysdate()");
+		Query query = em.createNativeQuery("Update COURSE set created_date=sysdate()");
 		int noOfRowsUpdated = query.executeUpdate();
 		logger.info("noOfRowsUpdated  -> {}", noOfRowsUpdated);
 		//SELECT * FROM COURSE  -> [Course[Web Services in 100 Steps], Course[JPA in 50 Steps - Updated], Course[Spring in 50 Steps], Course[Spring Boot in 100 Steps]]
 	}
-
 
 }

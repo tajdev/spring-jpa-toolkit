@@ -61,12 +61,12 @@ public class CourseRepositoryTest implements CommandLineRunner{
 	@DirtiesContext
 	public void saveCreateTest() {
 
-		repository.save(new Course("JPA in 250 Steps"));
+		repository.save(new Course("JPA in 2850 Steps"));
 		
-		Course course = repository.findByName("JPA in 250 Steps");
+		Course course = repository.findByName("JPA in 2850 Steps");
 		
 		assertNotNull(course);
-		assertEquals("JPA in 250 Steps",course.getName());
+		assertEquals("JPA in 2850 Steps",course.getName());
 
 	}
 	
