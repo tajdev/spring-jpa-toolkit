@@ -22,7 +22,7 @@ public class CourseRepository {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@PersistenceContext 
-	EntityManager em;
+	private EntityManager em;
 	
 	public List<Course> findAll(){
 		TypedQuery<Course> namedQuery =  em.createNamedQuery("find_all_courses",Course.class);

@@ -28,8 +28,6 @@ public class Review {
 	@Enumerated(EnumType.STRING)
 	private ReviewRating rating;
 	
-	
-	
 	// matching db column course_id
 	@ManyToOne
 	private Course course;

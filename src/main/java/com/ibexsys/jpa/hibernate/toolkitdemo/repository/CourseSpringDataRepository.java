@@ -23,8 +23,9 @@ public interface CourseSpringDataRepository extends JpaRepository<Course,Long> {
 	List<Course> findByNameOrderByIdDesc(String name);
 	
 	List<Course> deleteByName(String name);
+
 	
-//	//Custom Query
+	//Custom Query
 	@Query("Select c from Course c where name like '%100 Steps'")
 	List<Course> courseWith100StepsInName();
 	

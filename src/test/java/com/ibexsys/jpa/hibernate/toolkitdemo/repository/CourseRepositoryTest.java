@@ -24,7 +24,6 @@ import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Course;
 import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Review;
 
 @RunWith(SpringRunner.class)
-// Launches context from java source boot app
 @SpringBootTest(classes=ToolkitJpaDemoApplication.class)
 public class CourseRepositoryTest implements CommandLineRunner{
 
