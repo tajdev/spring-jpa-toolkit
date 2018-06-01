@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -25,15 +27,16 @@ import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Course;
 @RunWith(SpringRunner.class)
 // Launches context from java source boot app
 @SpringBootTest(classes=ToolkitJpaDemoApplication.class)
+@DirtiesContext(classMode= DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class CourseSpringDataRepositoryTest implements CommandLineRunner{
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
-	CourseSpringDataRepository repository;
+	private CourseSpringDataRepository repository;
 	
 	@Autowired
-	CourseRepository courseRepo;
+	private CourseRepository courseRepo;
 	
 	@Test
 	public void findById_CoursePresent() {
@@ -53,7 +56,7 @@ public class CourseSpringDataRepositoryTest implements CommandLineRunner{
 	}
 	
 	@Test
-	@DirtiesContext
+	@Transactional
 	public void  playingAroundWithSpringDataRepository() {
 		
 		Course course = new Course("Spring Data Repository in 10 Steps");
@@ -69,26 +72,6 @@ public class CourseSpringDataRepositoryTest implements CommandLineRunner{
 	
 	}
 	
-	
-	@Test
-	@DirtiesContext
-	public void  playingAroundWithTwoRepositories() {
-		
-		// Get and save from Spring Data Repo
-		Course course = new Course("Spring Data Repository in 10 Steps");
-		repository.save(course);
-		
-		course.setName("Name_Check");
-		repository.save(course);
-
-		// Coded Repo 
-		String newName = course.getName().concat("_Foo");
-		Course courseCoded = courseRepo.findByName(course.getName());
-		courseCoded.setName(newName);
-		courseRepo.save(courseCoded);
-		
-		assertTrue(courseRepo.findByName(newName).getName().equalsIgnoreCase(newName));
-	}
 	
 	@Test
 	public void sortCourses() {

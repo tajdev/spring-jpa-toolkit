@@ -3,6 +3,7 @@ package com.ibexsys.jpa.hibernate.toolkitdemo.repository;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -25,18 +26,18 @@ import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Review;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes=ToolkitJpaDemoApplication.class)
+@DirtiesContext(classMode= DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class CourseRepositoryTest implements CommandLineRunner{
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
-	CourseRepository repository;
+	private CourseRepository repository;
 	
 	@Autowired
-	EntityManager em;
+	private EntityManager em;
 	
 	@Test
-	@DirtiesContext
 	public void saveUpdateTest() {
 
 		String name = "JPA in 5 Steps";
@@ -57,16 +58,26 @@ public class CourseRepositoryTest implements CommandLineRunner{
 	}
 	
 	@Test
-	@DirtiesContext
-	public void saveCreateTest() {
+	@Transactional
+	public void saveCreateTestNoDuplicates() {
 
-		repository.save(new Course("JPA in 2850 Steps"));
-		
-		Course course = repository.findByName("JPA in 2850 Steps");
+		repository.save(new Course("JPA in 2850 Steps - No Dups Allowed"));
+		Course course = repository.findByName("JPA in 2850 Steps - No Dups Allowed");
 		
 		assertNotNull(course);
-		assertEquals("JPA in 2850 Steps",course.getName());
+		assertTrue(course.getName().equals("JPA in 2850 Steps - No Dups Allowed"));
+		
+	}
+	
+	
+	@Test
+	public void saveCreateTestHandlesDuplicates() {
 
+		repository.save(new Course("JPA in 2850 Steps"));
+		List<Course> courses = repository.findAllByName("JPA in 2850 Steps");
+		
+		assertNotNull(courses);
+		
 	}
 	
 
@@ -114,7 +125,6 @@ public class CourseRepositoryTest implements CommandLineRunner{
 	// Soft Delete, uses @SQLDelete and @Where clauses in Entity
 	@Test
 	@Transactional
-	@DirtiesContext
 	public void deleteByIdSoftDeleteTest() {
 		Course course = repository.findById(10001L);
 
@@ -134,8 +144,7 @@ public class CourseRepositoryTest implements CommandLineRunner{
 	}
 	
 	@Test
-	@DirtiesContext
-	public void playWithEntityManager() {
+   public void playWithEntityManager() {
 		repository.playWithEntityManager();
 		assert(true);
 	}
@@ -159,6 +168,6 @@ public class CourseRepositoryTest implements CommandLineRunner{
 		logger.info("{}", review.getCourse());
 
 	}
-	
+
 
 }

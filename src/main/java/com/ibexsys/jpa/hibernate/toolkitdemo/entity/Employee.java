@@ -2,8 +2,11 @@ package com.ibexsys.jpa.hibernate.toolkitdemo.entity;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+
+import org.hibernate.annotations.GenericGenerator;
 
 
 // Notes:
@@ -23,7 +26,14 @@ import javax.persistence.MappedSuperclass;
 public abstract class Employee {
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(
+			strategy=GenerationType.AUTO,
+			generator="native"
+	)
+	@GenericGenerator(
+		    name = "native", 
+		    strategy = "native"
+	)
 	private Long id;
 	
 	@Column(name="name", nullable = false)   // maps any name

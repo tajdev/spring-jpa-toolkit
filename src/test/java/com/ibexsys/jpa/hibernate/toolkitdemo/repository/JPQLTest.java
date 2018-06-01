@@ -15,11 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ibexsys.jpa.hibernate.toolkitdemo.ToolkitJpaDemoApplication;
+//import com.ibexsys.jpa.hibernate.toolkitdemo.ToolkitJpaDemoApplicationTests;
 import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Course;
 import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Student;
 
 @RunWith(SpringRunner.class)
-// Launches context from java source boot app
 @SpringBootTest(classes = ToolkitJpaDemoApplication.class)
 public class JPQLTest {
 
@@ -29,139 +29,98 @@ public class JPQLTest {
 	EntityManager em;
 
 	@Test
-	public void JPQL_Basic() {
-		List resultList = em.createQuery("Select c From Course c").getResultList();
-		logger.info("Select c From Course c -> {}", resultList);
-
+	public void jpql_basic() {
+		Query query = em.createNamedQuery("find_all_courses");
+		List resultList = query.getResultList();
+		logger.info("Select  c  From Course c -> {}", resultList);
 	}
-	
+
 	@Test
-	public void JPQL_Named_Type() {
-		
-		TypedQuery<Course> query = em.createNamedQuery("find_all_courses",Course.class);
+	public void jpql_typed() {
+		TypedQuery<Course> query = em.createNamedQuery("find_all_courses", Course.class);
+
 		List<Course> resultList = query.getResultList();
-		logger.info("Select c From Course c -> {}", resultList);
 
+		logger.info("Select  c  From Course c -> {}", resultList);
 	}
-	
-	@Test
-	public void JPQL_Native_Type() {
-		
-		Query query = em.createNativeQuery("SELECT * FROM COURSE",Course.class);
-		List<?> resultList = query.getResultList();
-		logger.info("Select c From Course c -> {}", resultList);
-
-	}
-	
-	@Test
-	public void JPQL_Native_Type_Parameter() {
-		
-		Query query = em.createNativeQuery("SELECT * FROM COURSE WHERE ID = ?",Course.class);
-		query.setParameter(1, 10001L);
-		List<?> resultList = query.getResultList();
-		logger.info("Select c From Course c Where ID = ? -> {}", resultList);
-
-	}
-	
-	@Test
-	public void JPQL_Native_Named_Parameter() {
-		
-		Query query = em.createNativeQuery("SELECT * FROM COURSE WHERE ID = :id",Course.class);
-		query.setParameter("id", 10001L);
-		List<?> resultList = query.getResultList();
-		logger.info("Select c From Course c Where ID = ? -> {}", resultList);
-
-	}
-	
 
 	@Test
-	public void JPQL_Type() {
-		
-		TypedQuery<Course> query = em.createQuery("Select c From Course c", Course.class);
+	public void jpql_where() {
+		TypedQuery<Course> query = em.createQuery("Select  c  From Course c where name like '%100 Steps'", Course.class);
+
 		List<Course> resultList = query.getResultList();
-		logger.info("Select c From Course c -> {}", resultList);
 
-	}
-	
-	@Test
-	public void JPQL_Where() {
-		
-		TypedQuery<Course> query = em.createQuery("Select c From Course c where name like '%100 Steps'", Course.class);
-		List<Course> resultList = query.getResultList();
-		logger.info("Select c From Course c -> {}", resultList);
-
+		logger.info("Select  c  From Course c where name like '%100 Steps'-> {}", resultList);
+		// [Course[Web Services in 100 Steps], Course[Spring Boot in 100 Steps]]
 	}
 
-	
 	@Test
-	public void JPQL_Courses_Without_students() {
-		
-		TypedQuery<Course> query = em.createQuery("Select c From Course c where c.students is empty", Course.class);
+	public void jpql_courses_without_students() {
+		TypedQuery<Course> query = em.createQuery("Select c from Course c where c.students is empty", Course.class);
 		List<Course> resultList = query.getResultList();
 		logger.info("Results -> {}", resultList);
-
+		// [Course[Spring in 50 Steps]]
 	}
+
 	
 	@Test
-	public void JPQL_Courses_At_Least_Students() {
-		
-		TypedQuery<Course> query = em.createQuery("Select c From Course c where size(c.students) >= 2", Course.class);
+	public void jpql_courses_with_atleast_2_students() {
+		TypedQuery<Course> query = em.createQuery("Select c from Course c where size(c.students) >= 2", Course.class);
 		List<Course> resultList = query.getResultList();
 		logger.info("Results -> {}", resultList);
-
+		//[Course[JPA in 50 Steps]]
 	}
-	
+
 	@Test
-	public void JPQL_Courses_Ordered_By_Students() {
-		
-		TypedQuery<Course> query = em.createQuery("Select c From Course c order by size(c.students)", Course.class);
+	public void jpql_courses_ordered_by_students() {
+		TypedQuery<Course> query = em.createQuery("Select c from Course c order by size(c.students) desc", Course.class);
 		List<Course> resultList = query.getResultList();
 		logger.info("Results -> {}", resultList);
 	}
-	
+
 	@Test
-	public void JPQL_students_with_passports_in_a_certain_pattern() {
-		
-		TypedQuery<Student> query = em.createQuery("Select s From Student s where s.passport like '%1234%'", Student.class);
+	public void jpql_students_with_passports_in_a_certain_pattern() {
+		TypedQuery<Student> query = em.createQuery("Select s from Student s where s.passport.number like '%1234%'", Student.class);
 		List<Student> resultList = query.getResultList();
 		logger.info("Results -> {}", resultList);
-
 	}
+
+	//like
+	//BETWEEN 100 and 1000
+	//IS NULL
+	//upper, lower, trim, length
 	
 	//JOIN => Select c, s from Course c JOIN c.students s
-	//LEFT JOIN =>  Select c,s from Course c LEFT JOIN c.student s
-	//CROSS JOIN =>Select c,s from Course c, Student s
-	
+	//LEFT JOIN => Select c, s from Course c LEFT JOIN c.students s
+	//CROSS JOIN => Select c, s from Course c, Student s
+	//3 and 4 =>3 * 4 = 12 Rows
 	@Test
-	public void join() {
-		Query  query = em.createQuery("Select c, s from Course c JOIN c.students s");
+	public void join(){
+		Query query = em.createQuery("Select c, s from Course c JOIN c.students s");
 		List<Object[]> resultList = query.getResultList();
-		logger.info("Results -> {}", resultList.size());
-		
-		for(Object[] result:resultList) {
-			logger.info("Course{} Student{}",result[0], result[1]);
+		logger.info("Results Size -> {}", resultList.size());
+		for(Object[] result:resultList){
+			logger.info("Course{} Student{}", result[0], result[1]);
 		}
 	}
-	
+
 	@Test
-	public void left_join() {
-		Query  query = em.createQuery("Select c, s from Course c LEFT JOIN c.students s");
+	public void left_join(){
+		Query query = em.createQuery("Select c, s from Course c LEFT JOIN c.students s");
 		List<Object[]> resultList = query.getResultList();
-		logger.info("Results -> {}", resultList.size());
-		
-		for(Object[] result:resultList) {
-			logger.info("Course{} Student{}",result[0], result[1]);
+		logger.info("Results Size -> {}", resultList.size());
+		for(Object[] result:resultList){
+			logger.info("Course{} Student{}", result[0], result[1]);
 		}
 	}
-	
+
 	@Test
-	public void cross_join() {
-		Query  query = em.createQuery("Select c,s from Course c, Student s");
+	public void cross_join(){
+		Query query = em.createQuery("Select c, s from Course c, Student s");
 		List<Object[]> resultList = query.getResultList();
-		logger.info("Results -> {}", resultList.size());
-		
-		for(Object[] result:resultList) {
-			logger.info("Course{} Student{}",result[0], result[1]);
+		logger.info("Results Size -> {}", resultList.size());
+		for(Object[] result:resultList){
+			logger.info("Course{} Student{}", result[0], result[1]);
 		}
 	}
-}
+}	

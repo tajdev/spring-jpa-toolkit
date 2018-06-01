@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ibexsys.jpa.hibernate.toolkitdemo.ToolkitJpaDemoApplication;
@@ -20,16 +21,17 @@ import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Course;
 
 @RunWith(SpringRunner.class)  // Mute for this testing class, but what the hell
 @SpringBootTest(classes=ToolkitJpaDemoApplication.class)
+@DirtiesContext(classMode= DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class PeformanceTuningTest implements CommandLineRunner{
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
-	CourseRepository repository;
+	private CourseRepository repository;
 	
 	
 	@Autowired
-	EntityManager em;
+	private EntityManager em;
 
 	
 	/*  Problem from entity for ManyToMany creates N+1

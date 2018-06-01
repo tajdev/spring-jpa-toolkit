@@ -44,6 +44,12 @@ public class CourseRepository {
 		return namedQuery.getSingleResult();
 	}
 	
+	public List<Course> findAllByName(String name) {
+		TypedQuery<Course> namedQuery = em.createNamedQuery("find_course_by_name",Course.class);
+		namedQuery.setParameter(0, name);
+		return namedQuery.getResultList();
+	}
+	
 	// Insert or Update
 	public Course save(Course course) {
         

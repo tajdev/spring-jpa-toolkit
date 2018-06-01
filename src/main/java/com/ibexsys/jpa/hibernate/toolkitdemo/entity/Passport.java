@@ -4,10 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +25,14 @@ public class Passport {
 	private static Logger LOGGER = LoggerFactory.getLogger(Passport.class);
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(
+			strategy=GenerationType.AUTO,
+			generator="native"
+	)
+	@GenericGenerator(
+		    name = "native", 
+		    strategy = "native"
+	)
 	private Long id;
 	
 	@Column(name="number", nullable = false)   // maps any name
