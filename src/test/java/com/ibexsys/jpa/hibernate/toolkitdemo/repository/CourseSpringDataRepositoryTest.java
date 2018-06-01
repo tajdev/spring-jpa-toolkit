@@ -1,16 +1,10 @@
 package com.ibexsys.jpa.hibernate.toolkitdemo.repository;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 import java.util.Optional;
-
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +21,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ibexsys.jpa.hibernate.toolkitdemo.ToolkitJpaDemoApplication;
 import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Course;
-import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Review;
 
 @RunWith(SpringRunner.class)
 // Launches context from java source boot app

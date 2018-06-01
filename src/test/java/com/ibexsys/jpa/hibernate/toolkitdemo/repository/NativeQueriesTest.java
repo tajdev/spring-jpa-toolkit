@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ibexsys.jpa.hibernate.toolkitdemo.ToolkitJpaDemoApplication;
 import com.ibexsys.jpa.hibernate.toolkitdemo.ToolkitJpaDemoApplication;
 import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Course;
 @RunWith(SpringRunner.class)
