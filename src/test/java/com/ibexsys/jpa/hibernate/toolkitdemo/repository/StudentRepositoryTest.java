@@ -1,6 +1,13 @@
 package com.ibexsys.jpa.hibernate.toolkitdemo.repository;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.junit.Test;
@@ -102,8 +109,8 @@ public class StudentRepositoryTest {
 	@Transactional
 	public void insertStudentAndCourse() {
 
-		Student student = new Student("JackOff");
-		Course course = new Course("Microservices in 100 steps");
+		Student student = new Student("Adding This One");
+		Course course = new Course("Microservices in 100 steps - oops");
 
 		em.persist(student);
 		em.persist(course);
@@ -119,5 +126,45 @@ public class StudentRepositoryTest {
 		logger.info("Courses -> {}", student.getCourses());
 
 	}
+	
+	@Test
+	@Transactional
+	public void insertStudentAndCourseThenDeleteTest() {
+
+		Student student = new Student("Foo Man Chu");
+		Course course = new Course("Microservices in 100 steps - Testing");
+
+		em.persist(student);
+		em.persist(course);
+
+		student.addCourse(course);
+		course.addStudent(student);
+
+		// persist owning side
+		em.persist(student);
+
+		student = em.find(Student.class, student.getId());
+        assertNotNull(student);
+		
+	
+		// Check the join table
+		Query query = em.createNativeQuery("SELECT * FROM STUDENT_COURSE where student_id = :id");
+		query.setParameter("id", student.getId());
+		List<?> resultList = query.getResultList();
+        assertTrue(resultList.size() == 1);
+   		
+		// Delete it
+    	Long testJoinId = student.getId();
+		repo.deleteById(student.getId());
+		assertNull(repo.findById(student.getId()));
+		
+		// Check the join table
+		query = em.createNativeQuery("SELECT * FROM STUDENT_COURSE where student_id = :id");
+		query.setParameter("id", testJoinId);
+		resultList = query.getResultList();
+        assertTrue(resultList.size() == 0);
+		
+	}
+	
 
 }

@@ -49,6 +49,9 @@ public class StudentSpringDataRepositoryTest implements CommandLineRunner {
 
 		// Optional deals
 		Optional<Student> studentOptional = repository.findById(20001L);
+		repository.deleteById(20001L);
+
+		studentOptional = repository.findById(20001L);
 		assertFalse(studentOptional.isPresent());
 	}
 

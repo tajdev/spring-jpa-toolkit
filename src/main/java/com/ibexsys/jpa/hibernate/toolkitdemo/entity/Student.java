@@ -53,8 +53,8 @@ public class Student {
 	private Passport passport;
 
 	@ManyToMany
-	@JoinTable(name = "STUDENT_COURSE", joinColumns = @JoinColumn(name = "STUDENT_ID"), inverseJoinColumns = @JoinColumn(name = "COURSE_ID"))
-
+	@JoinTable(name = "STUDENT_COURSE", joinColumns = @JoinColumn(name = "STUDENT_ID"), 
+	           inverseJoinColumns = @JoinColumn(name = "COURSE_ID"))
 	private List<Course> courses = new ArrayList<Course>();
 
 	public String getName() {
@@ -97,5 +97,4 @@ public class Student {
 	public void setAddress(Address address) {
 		this.address = address;
 	}
-
 }
