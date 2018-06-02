@@ -1,13 +1,9 @@
 package com.ibexsys.jpa.hibernate.toolkitdemo.repository;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
 import java.util.Optional;
-
-import javax.transaction.Transactional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,18 +19,18 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ibexsys.jpa.hibernate.toolkitdemo.ToolkitJpaDemoApplication;
-import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Course;
+import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Student;
 
 @RunWith(SpringRunner.class)
 // Launches context from java source boot app
 @SpringBootTest(classes = ToolkitJpaDemoApplication.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class CourseSpringDataRepositoryTest implements CommandLineRunner {
+public class StudentSpringDataRepositoryTest implements CommandLineRunner {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private CourseSpringDataRepository repository;
+	private StudentSpringDataRepository repository;
 
 	@Autowired
 	private CourseRepository courseRepo;
@@ -43,8 +39,8 @@ public class CourseSpringDataRepositoryTest implements CommandLineRunner {
 	public void findById_CoursePresent() {
 
 		// Optional deals
-		Optional<Course> courseOptional = repository.findById(10001l);
-		assertTrue(courseOptional.isPresent());
+		Optional<Student> studentOptional = repository.findById(20001L);
+		assertTrue(studentOptional.isPresent());
 
 	}
 
@@ -52,31 +48,12 @@ public class CourseSpringDataRepositoryTest implements CommandLineRunner {
 	public void findById_NotCoursePresent() {
 
 		// Optional deals
-		Optional<Course> courseOptional = repository.findById(20001l);
-		assertFalse(courseOptional.isPresent());
+		Optional<Student> studentOptional = repository.findById(20001L);
+		assertFalse(studentOptional.isPresent());
 	}
 
-	@Test
-	@Transactional
-	public void playingAroundWithSpringDataRepository() {
-
-		Course course = new Course("Spring Data Repository in 10 Steps");
-		repository.save(course);
-		course.setName("Name_Check");
-		repository.save(course);
-
-		List<Course> courses = repository.findByName("Name_Check");
-		assertNotNull(courses);
-		
-		assertTrue(courses.size() != 0);
-
-
-		logger.info("All Courses -> {}", repository.findAll());
-		logger.info("Course Count -> {}", repository.count());
-
-	}
-
-	@Test
+	//@Test
+	// @ToDo Added created/modifed ?? not needed
 	public void sortCourses() {
 
 		Sort dateSort = new Sort(Sort.Direction.ASC, "createdDate");
@@ -87,9 +64,9 @@ public class CourseSpringDataRepositoryTest implements CommandLineRunner {
 	@Test
 	public void paginationCourses() {
 
-		PageRequest pageRequest = PageRequest.of(0, 5);
+		PageRequest pageRequest = PageRequest.of(0, 2);
 
-		Page<Course> firstPage = repository.findAll(pageRequest);
+		Page<Student> firstPage = repository.findAll(pageRequest);
 		logger.info("First Page -> {}", firstPage.getContent());
 
 	}
@@ -97,8 +74,8 @@ public class CourseSpringDataRepositoryTest implements CommandLineRunner {
 	@Test
 	public void paginationCoursesAll() {
 
-		PageRequest pageRequest = PageRequest.of(0, 5);
-		Page<Course> page = repository.findAll(pageRequest);
+		PageRequest pageRequest = PageRequest.of(0, 2);
+		Page<Student> page = repository.findAll(pageRequest);
 
 		int i = 1;
 		logger.info("Page - {} -> {}", i++, page.getContent());
