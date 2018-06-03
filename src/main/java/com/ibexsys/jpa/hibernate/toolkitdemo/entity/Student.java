@@ -3,8 +3,8 @@ package com.ibexsys.jpa.hibernate.toolkitdemo.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -13,10 +13,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +28,9 @@ import org.slf4j.LoggerFactory;
 // Make default constructor protected since JPA does not allow use of it by others
 
 @Entity
+@Cacheable // Causes entity to do cache lookup in 2nd level cache
+@SQLDelete(sql = "update student set is_deleted=true where id=?") // Hibernate Specific
+@Where(clause = "is_deleted = false") 
 @Table(name = "Student") // maps any table
 public class Student {
 
@@ -35,9 +41,6 @@ public class Student {
 	@GenericGenerator(name = "native", strategy = "native")
 	private Long id;
 
-	protected Student() {
-	};
-
 	public Student(String name) {
 		this.name = name;
 	}
@@ -45,20 +48,37 @@ public class Student {
 	@Column(name = "name", nullable = false) // maps any name
 	private String name;
 
-	@Embedded
-	private Address address;
-
-	// Owner of one-to-one
-	@OneToOne(fetch = FetchType.LAZY)
-	private Passport passport;
-
+	@ManyToMany
+	@JoinTable(name = "STUDENT_ADDRESS", joinColumns = @JoinColumn(name = "STUDENT_ID"), 
+	           inverseJoinColumns = @JoinColumn(name = "ADDRESS_ID"))
+	private List<Address>  addresss = new ArrayList<Address>();
+	
 	@ManyToMany
 	@JoinTable(name = "STUDENT_COURSE", joinColumns = @JoinColumn(name = "STUDENT_ID"), 
 	           inverseJoinColumns = @JoinColumn(name = "COURSE_ID"))
 	private List<Course> courses = new ArrayList<Course>();
 
+	// Owner of one-to-one
+	@OneToOne(fetch = FetchType.LAZY)
+	private Passport passport;
+	
+	private boolean isDeleted;
+
+	protected Student() {
+	};
+	
 	public String getName() {
 		return name;
+	}
+
+	public Student(String name, List<Address> addresss, List<Course> courses, 
+			       Passport passport, boolean isDeleted) {
+		super();
+		this.name = name;
+		this.addresss = addresss;
+		this.courses = courses;
+		this.passport = passport;
+		this.isDeleted = isDeleted;
 	}
 
 	public void setName(String name) {
@@ -90,11 +110,20 @@ public class Student {
 		this.courses.add(course);
 	}
 
-	public Address getAddress() {
-		return address;
+
+	public List<Address> getAddressList() {
+		return addresss;
 	}
 
-	public void setAddress(Address address) {
-		this.address = address;
+	public void addAddress(Address address) {
+		this.addresss.add(address);
+	}
+
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 }

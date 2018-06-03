@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ibexsys.jpa.hibernate.toolkitdemo.ToolkitJpaDemoApplication;
 import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Address;
+import com.ibexsys.jpa.hibernate.toolkitdemo.entity.AddressType;
 import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Course;
 import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Passport;
 import com.ibexsys.jpa.hibernate.toolkitdemo.entity.Student;
@@ -37,6 +38,7 @@ public class StudentRepositoryTest {
 
 	private @Autowired EntityManager em;
 
+	// @Add Other Methods for CRUD
 	@Test
 	@Transactional
 	public void simpleCrudTest() {
@@ -93,52 +95,89 @@ public class StudentRepositoryTest {
 
 	}
 
+//	@Test
+//	@Transactional
+//  @Todo
+//	public void setStudentAddressTest() {
+//
+//		Student student = em.find(Student.class, 20001L);
+//		student.setAddress(new Address("Line1", "Line2", "City"));
+//		em.flush();
+//
+//		logger.info("student with address -> {}", student);
+//
+//	}
+
 	@Test
 	@Transactional
-	public void setStudentAddressTest() {
+	public void insertStudentAndCourseAndAddressTest() {
 
-		Student student = em.find(Student.class, 20001L);
-		student.setAddress(new Address("Line1", "Line2", "City"));
-		em.flush();
+		Student student = new Student("Foo Man Chu");
+		Course course = new Course("Microservices in 100 steps - Testing");
+		Address address = new Address("1025 Foo Ln","Apt 123","Attn FuManChu","LA","CA",
+				         "90230","United States",AddressType.STREET_ADDRESS);
 
-		logger.info("student with address -> {}", student);
-
-	}
-
-	@Test
-	@Transactional
-	public void insertStudentAndCourse() {
-
-		Student student = new Student("Adding This One");
-		Course course = new Course("Microservices in 100 steps - oops");
-
+		em.persist(address);
 		em.persist(student);
 		em.persist(course);
+		em.persist(address);
 
 		student.addCourse(course);
 		course.addStudent(student);
+		
+		student.addAddress(address);
+		address.addStudent(student);;
 
 		// persist owning side
 		em.persist(student);
 
 		student = em.find(Student.class, student.getId());
+		assertNotNull(student);
+		
+		// Check the join table for course student
+		Query query = em.createNativeQuery("SELECT * FROM STUDENT_COURSE where student_id = :id");
+		query.setParameter("id", student.getId());
+		List<?> resultList = query.getResultList();
+        assertTrue(resultList.size() == 1);
+        
+		// Check the join table
+		query = em.createNativeQuery("SELECT * FROM STUDENT_ADDRESS where student_id = :id");
+		query.setParameter("id", student.getId());
+		resultList = query.getResultList();
+        assertTrue(resultList.size() == 1);
+		
+		
+		
 		logger.info("student -> {}", student);
 		logger.info("Courses -> {}", student.getCourses());
+		logger.info("Address -> {}", student.getAddressList());
 
 	}
 	
+	/*
+	 * insert into address(id,line1,line2,line3,city,state,zip,country,address_type,is_deleted)
+            values(30001,'1025 Foo Ln','Apt 123','Attn FuManChu','LA','CA','90230','United States',1,false)
+	 */
+	
 	@Test
 	@Transactional
-	public void insertStudentAndCourseThenDeleteTest() {
+	public void insertStudentAndCourseAndAddressThenDeleteTest() {
 
 		Student student = new Student("Foo Man Chu");
 		Course course = new Course("Microservices in 100 steps - Testing");
+		Address address = new Address("1025 Foo Ln","Apt 123","Attn FuManChu","LA","CA",
+				         "90230","United States",AddressType.STREET_ADDRESS);
 
+		em.persist(address);
 		em.persist(student);
 		em.persist(course);
+		em.persist(address);
 
 		student.addCourse(course);
 		course.addStudent(student);
+		
+		student.addAddress(address);
+		address.addStudent(student);
 
 		// persist owning side
 		em.persist(student);
@@ -147,10 +186,16 @@ public class StudentRepositoryTest {
         assertNotNull(student);
 		
 	
-		// Check the join table
+		// Check the join table for course student
 		Query query = em.createNativeQuery("SELECT * FROM STUDENT_COURSE where student_id = :id");
 		query.setParameter("id", student.getId());
 		List<?> resultList = query.getResultList();
+        assertTrue(resultList.size() == 1);
+        
+		// Check the join table
+		query = em.createNativeQuery("SELECT * FROM STUDENT_ADDRESS where student_id = :id");
+		query.setParameter("id", student.getId());
+		resultList = query.getResultList();
         assertTrue(resultList.size() == 1);
    		
 		// Delete it
@@ -158,13 +203,18 @@ public class StudentRepositoryTest {
 		repo.deleteById(student.getId());
 		assertNull(repo.findById(student.getId()));
 		
-		// Check the join table
+		// Check the join again
 		query = em.createNativeQuery("SELECT * FROM STUDENT_COURSE where student_id = :id");
 		query.setParameter("id", testJoinId);
 		resultList = query.getResultList();
         assertTrue(resultList.size() == 0);
+        
+		// Check the join table again
+		query = em.createNativeQuery("SELECT * FROM STUDENT_ADDRESS where student_id = :id");
+		query.setParameter("id", student.getId());
+		resultList = query.getResultList();
+        assertTrue(resultList.size() == 0);
 		
 	}
-	
 
 }
