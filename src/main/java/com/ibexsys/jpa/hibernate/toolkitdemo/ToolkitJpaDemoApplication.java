@@ -6,8 +6,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+// This version is from intellij
+
 @SpringBootApplication
 public class ToolkitJpaDemoApplication implements CommandLineRunner {
+
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
